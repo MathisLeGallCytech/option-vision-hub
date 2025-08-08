@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+
+{% block title %}Indices & Actions – Marchés{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex w-full bg-background">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-card border-r border-border flex flex-col">
+        <div class="p-4 border-b border-border">
+            <h2 class="text-lg font-semibold">Navigation</h2>
+        </div>
+        <nav class="flex-1 p-4">
+            <ul class="space-y-2">
+                <li>
+                    <a href="{{ url_for('index') }}" class="flex items-center p-2 rounded-md hover:bg-accent hover:text-accent-foreground">
+                        <i data-lucide="home" class="mr-2 h-4 w-4"></i>
+                        <span>Accueil</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('indices_actions') }}" class="flex items-center p-2 rounded-md bg-primary text-primary-foreground">
+                        <i data-lucide="candlestick-chart" class="mr-2 h-4 w-4"></i>
+                        <span>Indices & Actions</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('call_put') }}" class="flex items-center p-2 rounded-md hover:bg-accent hover:text-accent-foreground">
+                        <i data-lucide="line-chart" class="mr-2 h-4 w-4"></i>
+                        <span>Call & Put</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('greeks') }}" class="flex items-center p-2 rounded-md hover:bg-accent hover:text-accent-foreground">
+                        <i data-lucide="sigma" class="mr-2 h-4 w-4"></i>
+                        <span>Greeks</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('volatility_surface') }}" class="flex items-center p-2 rounded-md hover:bg-accent hover:text-accent-foreground">
+                        <i data-lucide="thermometer" class="mr-2 h-4 w-4"></i>
+                        <span>Volatility Surface</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('risk_var_svar') }}" class="flex items-center p-2 rounded-md hover:bg-accent hover:text-accent-foreground">
+                        <i data-lucide="shield-alert" class="mr-2 h-4 w-4"></i>
+                        <span>VaR & SVAR</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col">
+        <!-- Header -->
+        <header class="h-14 flex items-center border-b border-border px-4 gap-3">
+            <h1 class="text-lg font-semibold">Equity Derivatives Dashboard</h1>
+            <div class="ml-auto flex items-center gap-2">
+                <button id="refresh-btn" class="flex items-center gap-2 px-3 py-1 bg-primary text-primary-foreground rounded-md hover:bg-primary/90">
+                    <i data-lucide="refresh-cw" class="h-4 w-4"></i>
+                    <span>Actualiser</span>
+                </button>
+                <span id="last-update" class="text-sm text-muted-foreground"></span>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="flex-1 p-6 container">
+            <div class="space-y-8">
+                <header class="space-y-2">
+                    <h1 class="text-3xl md:text-4xl font-bold flex items-center gap-2">
+                        <i data-lucide="candlestick-chart" class="h-6 w-6 text-primary"></i>
+                        Indices & Actions
+                    </h1>
+                    <p class="text-muted-foreground">
+                        Données en temps réel des principaux indices et actions
+                    </p>
+                </header>
+
+                <main class="space-y-8">
+                    <!-- Carrés: Indices & Actions -->
+                    <section class="grid gap-6 sm:grid-cols-2">
+                        <!-- Indices -->
+                        <div class="p-6 bg-card border border-border rounded-lg">
+                            <h3 class="text-lg font-semibold mb-4">Indices</h3>
+                            <div id="indices-container" class="space-y-3">
+                                <div class="flex items-center justify-center py-8">
+                                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="p-6 bg-card border border-border rounded-lg">
+                            <h3 class="text-lg font-semibold mb-4">Actions</h3>
+                            <div id="stocks-container" class="space-y-3">
+                                <div class="flex items-center justify-center py-8">
+                                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Grand rectangle: Graphique -->
+                    <section>
+                        <div class="p-6 bg-card border border-border rounded-lg">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold">Graphique du marché</h3>
+                                <select id="chart-symbol" class="px-3 py-1 border border-border rounded-md bg-background">
+                                    <option value="^FCHI">CAC 40</option>
+                                    <option value="^GSPC">S&P 500</option>
+                                    <option value="^IXIC">NASDAQ</option>
+                                    <option value="AAPL">Apple</option>
+                                    <option value="MSFT">Microsoft</option>
+                                    <option value="GOOGL">Google</option>
+                                </select>
+                            </div>
+                            <div class="aspect-video w-full">
+                                <canvas id="market-chart"></canvas>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="border-t border-border py-6 text-center text-sm text-muted-foreground">
+            © 2025 – Projet Flask Derivatives
+        </footer>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+    
+    // Variables globales
+    let marketChart = null;
+    let currentData = null;
+    
+    // Fonction pour formater les nombres
+    function formatNumber(num) {
+        return new Intl.NumberFormat('fr-FR').format(num);
+    }
+    
+    // Fonction pour formater les pourcentages
+    function formatPercent(num) {
+        return num >= 0 ? `+${num.toFixed(2)}%` : `${num.toFixed(2)}%`;
+    }
+    
+    // Fonction pour obtenir la couleur selon la variation
+    function getChangeColor(change) {
+        return change >= 0 ? 'text-green-500' : 'text-red-500';
+    }
+    
+    // Fonction pour créer un élément de carte
+    function createCard(data, isIndex = true) {
+        const changeColor = getChangeColor(data.change_percent);
+        const changeIcon = data.change_percent >= 0 ? 'trending-up' : 'trending-down';
+        
+        return `
+            <div class="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                <div class="flex-1">
+                    <div class="font-semibold">${isIndex ? data.symbol : data.name}</div>
+                    <div class="text-sm text-muted-foreground">${isIndex ? data.symbol : data.name}</div>
+                </div>
+                <div class="text-right">
+                    <div class="font-semibold">${formatNumber(data.price)}</div>
+                    <div class="flex items-center gap-1 text-sm ${changeColor}">
+                        <i data-lucide="${changeIcon}" class="h-3 w-3"></i>
+                        <span>${formatPercent(data.change_percent)}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Fonction pour charger les données de marché
+    async function loadMarketData() {
+        try {
+            const response = await fetch('/api/market-data');
+            const data = await response.json();
+            
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            
+            currentData = data;
+            
+            // Mettre à jour les indices
+            const indicesContainer = document.getElementById('indices-container');
+            indicesContainer.innerHTML = '';
+            
+            Object.entries(data.indices).forEach(([name, indexData]) => {
+                indicesContainer.innerHTML += createCard(indexData, true);
+            });
+            
+            // Mettre à jour les actions
+            const stocksContainer = document.getElementById('stocks-container');
+            stocksContainer.innerHTML = '';
+            
+            Object.entries(data.stocks).forEach(([symbol, stockData]) => {
+                stocksContainer.innerHTML += createCard(stockData, false);
+            });
+            
+            // Mettre à jour le timestamp
+            const lastUpdate = document.getElementById('last-update');
+            const timestamp = new Date(data.timestamp).toLocaleTimeString('fr-FR');
+            lastUpdate.textContent = `Dernière mise à jour: ${timestamp}`;
+            
+            // Réinitialiser les icônes
+            lucide.createIcons();
+            
+        } catch (error) {
+            console.error('Erreur lors du chargement des données:', error);
+            document.getElementById('indices-container').innerHTML = '<div class="text-red-500 text-center py-4">Erreur de chargement des données</div>';
+            document.getElementById('stocks-container').innerHTML = '<div class="text-red-500 text-center py-4">Erreur de chargement des données</div>';
+        }
+    }
+    
+    // Fonction pour charger les données de graphique
+    async function loadChartData(symbol) {
+        try {
+            const response = await fetch(`/api/chart-data/${symbol}`);
+            const data = await response.json();
+            
+            if (data.error) {
+                throw new Error(data.error);
+            }
+            
+            // Détruire le graphique existant
+            if (marketChart) {
+                marketChart.destroy();
+            }
+            
+            // Créer le nouveau graphique
+            const ctx = document.getElementById('market-chart').getContext('2d');
+            marketChart = new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: 'rgba(255, 255, 255, 0.7)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+        } catch (error) {
+            console.error('Erreur lors du chargement du graphique:', error);
+            const canvas = document.getElementById('market-chart');
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.font = '16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('Erreur de chargement du graphique', canvas.width / 2, canvas.height / 2);
+        }
+    }
+    
+    // Événements
+    document.getElementById('refresh-btn').addEventListener('click', () => {
+        loadMarketData();
+        const symbol = document.getElementById('chart-symbol').value;
+        loadChartData(symbol);
+    });
+    
+    document.getElementById('chart-symbol').addEventListener('change', (e) => {
+        loadChartData(e.target.value);
+    });
+    
+    // Chargement initial
+    loadMarketData();
+    loadChartData('^FCHI');
+    
+    // Actualisation automatique toutes les 5 minutes
+    setInterval(() => {
+        loadMarketData();
+    }, 300000);
+</script>
+{% endblock %}

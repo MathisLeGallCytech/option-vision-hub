@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Call & Put – Options{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex w-full bg-background">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-card border-r border-border flex flex-col">
+        <div class="p-4 border-b border-border">
+            <h2 class="text-lg font-semibold">Navigation</h2>
+        </div>
+        <nav class="flex-1 p-4">
+            <ul class="space-y-2">
+                <li>
+                    <a href="{{ url_for('index') }}" class="flex items-center p-2 rounded-md hover:bg-accent hover:text-accent-foreground">
+                        <i data-lucide="home" class="mr-2 h-4 w-4"></i>
+                        <span>Accueil</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('indices_actions') }}" class="flex items-center p-2 rounded-md hover:bg-accent hover:text-accent-foreground">
+                        <i data-lucide="candlestick-chart" class="mr-2 h-4 w-4"></i>
+                        <span>Indices & Actions</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('call_put') }}" class="flex items-center p-2 rounded-md bg-primary text-primary-foreground">
+                        <i data-lucide="line-chart" class="mr-2 h-4 w-4"></i>
+                        <span>Call & Put</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('greeks') }}" class="flex items-center p-2 rounded-md hover:bg-accent hover:text-accent-foreground">
+                        <i data-lucide="sigma" class="mr-2 h-4 w-4"></i>
+                        <span>Greeks</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('volatility_surface') }}" class="flex items-center p-2 rounded-md hover:bg-accent hover:text-accent-foreground">
+                        <i data-lucide="thermometer" class="mr-2 h-4 w-4"></i>
+                        <span>Volatility Surface</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url_for('risk_var_svar') }}" class="flex items-center p-2 rounded-md hover:bg-accent hover:text-accent-foreground">
+                        <i data-lucide="shield-alert" class="mr-2 h-4 w-4"></i>
+                        <span>VaR & SVAR</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col">
+        <!-- Header -->
+        <header class="h-14 flex items-center border-b border-border px-4 gap-3">
+            <h1 class="text-lg font-semibold">Equity Derivatives Dashboard</h1>
+        </header>
+
+        <!-- Content -->
+        <div class="flex-1 p-6 container">
+            <div class="space-y-8">
+                <header class="space-y-2">
+                    <h1 class="text-3xl md:text-4xl font-bold flex items-center gap-2">
+                        <i data-lucide="line-chart" class="h-6 w-6 text-primary"></i>
+                        Call & Put
+                    </h1>
+                    <p class="text-muted-foreground">
+                        Visualisation des options européennes de type Call et Put
+                    </p>
+                </header>
+
+                <main class="space-y-8">
+                    <div class="p-6 bg-card border border-border rounded-lg">
+                        <h3 class="text-lg font-semibold mb-4">Graphique Call & Put</h3>
+                        <div class="aspect-video w-full rounded-md border border-border bg-muted/10 flex items-center justify-center text-sm text-muted-foreground">
+                            Espace réservé au graphique Call & Put (Flask)
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="border-t border-border py-6 text-center text-sm text-muted-foreground">
+            © 2025 – Projet Flask Derivatives
+        </footer>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+</script>
+{% endblock %}
