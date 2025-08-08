@@ -103,7 +103,8 @@ All colors MUST be HSL.
 
 @layer base {
   * {
-    @apply border-border;
+    /* Apply base border color via design token */
+    border-color: hsl(var(--border));
   }
 
   body {
