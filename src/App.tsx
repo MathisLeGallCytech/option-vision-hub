@@ -10,6 +10,7 @@ import Greeks from "./pages/Greeks";
 import VolatilitySurface from "./pages/VolatilitySurface";
 import RiskVarSvar from "./pages/RiskVarSvar";
 import NotFound from "./pages/NotFound";
+import IndicesActions from "./pages/IndicesActions";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<DashboardLayout />}>
             <Route index element={<Index />} />
+            <Route path="indices-actions" element={<IndicesActions />} />
             <Route path="call-put" element={<CallPut />} />
             <Route path="greeks" element={<Greeks />} />
             <Route path="volatility-surface" element={<VolatilitySurface />} />

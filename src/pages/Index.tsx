@@ -1,9 +1,15 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LineChart, Sigma, Thermometer, ShieldAlert } from "lucide-react";
+import { LineChart, Sigma, Thermometer, ShieldAlert, CandlestickChart } from "lucide-react";
 import { Link } from "react-router-dom";
 import Seo from "@/components/Seo";
 
 const cards = [
+  {
+    title: "Indices & Actions",
+    icon: CandlestickChart,
+    text: "Aperçu des indices et actions avec un grand graphique",
+    to: "/indices-actions",
+  },
   {
     title: "Call & Put",
     icon: LineChart,

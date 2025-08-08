@@ -1,4 +1,4 @@
-import { Home, LineChart, Sigma, Thermometer, ShieldAlert } from "lucide-react";
+import { Home, LineChart, Sigma, Thermometer, ShieldAlert, CandlestickChart } from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
   Sidebar,
@@ -13,6 +13,7 @@ import {
 
 const items = [
   { title: "Accueil", url: "/", icon: Home },
+  { title: "Indices & Actions", url: "/indices-actions", icon: CandlestickChart },
   { title: "Call & Put", url: "/call-put", icon: LineChart },
   { title: "Greeks", url: "/greeks", icon: Sigma },
   { title: "Volatility Surface", url: "/volatility-surface", icon: Thermometer },
